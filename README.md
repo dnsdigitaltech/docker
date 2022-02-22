@@ -218,3 +218,24 @@ Crie um novo containa com execução de 1 dia
 Comunicação entre nomes dos containers
 
 ```ping ubuntu2```
+
+### As redes none e host
+
+Criando container rede none
+
+```docker run -d --network none ubuntu sleep 1d```
+
+Verificando os drivers existentes
+
+```docker network ls```
+
+Executando o container na rede host
+
+```docker run -d --network host dnssites/app-node:1.0```
+
+Neste caso se a minha aplicação funciona na porta 3000 tenho acesso direto, pois coloquei meu container no mesmo host da minha rede.
+ ```http://localhost:3000/```
+
+ OBS: se houvesse outra aplicação rodadno na mesma porta daria conflito e nã exetutaria este container.
+
+
