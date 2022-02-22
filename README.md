@@ -284,7 +284,18 @@ Para e exetutar o container do banco mongo
 
 # Cordenando containers
 
-INstalando o docker-compose
+### Conhecendo o docker-compose
+
+Instalando o docker-compose
 
 ```https://docs.docker.com/compose/install/```
 
+### Definindo serviços
+
+Criando o arquivo docker-compose.yml
+
+OBS: está em ymls/docker-compose.yml
+
+Executando ao arquivo docker-compose.yml
+
+```docker-compose up```
