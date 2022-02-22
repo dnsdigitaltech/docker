@@ -79,13 +79,13 @@ Para criar um docker tag basta executar o comando abaixo com usuario/imagem do d
 
 # Persistindo informações
 
-# Flag -v
+### Flag -v
 
 Ao executar um container para criá-lo precisa passar paramentros para que os dados que forem persistidos local possem a ser persistido em algum diretório na mais máquina, no meu host. Basta criar o diretório neste caso criei um com o nome volume-docker e referencie-o, tudo que for criado no diretório do container /app será persistido no diretório /volume-docker do meu host.
 
 ```docker run -it -v /var/www/html/projetos/docker/volume-docker:/app ubuntu bash```
 
-# Flag --mount 
+### Flag --mount 
 
 ```docker run -it --mount type=bind,source=/var/www/html/projetos/docker/volume-docker,target=/app ubuntu bash```
 
@@ -107,7 +107,7 @@ Criando volume com --mount
 
 ```docker run -it --mount source=meu-volume,target=/app ubuntu bash```
 
-# Flag tmpfs
+### Flag tmpfs
 
 Inciando o container com --tmpfs
 
@@ -117,3 +117,104 @@ Inciando o container com --tmpfs
 
 ```docker run -it --mount type=tmpfs,destination=/app ubuntu bash```
 
+# Comunicação de containers pela rede
+
+### Conhecendo a rede bridge
+
+crie um conteianer em execução
+
+```docker run -it ubuntu bash```
+
+Abra um outro terminal e veja o conteiner em execução
+
+```docker ps```
+
+Inspeciona o container criado
+
+```docker inspect 49f695aca8f3```
+
+Você verá que vai aparece toda descrição do container inclusive o opção de bridge
+
+"Networks": {
+            "bridge": {
+                "IPAMConfig": null,
+                "Links": null,
+                "Aliases": null,
+                "NetworkID": "c4a9c2484d89fedb21bcc5eb19acc92aad924c2f2204162766e4be0d16e9cd4f",
+                "EndpointID": "c0d7d796ae3527b15b58498a71c7590ef0a2f6e8694ead59eabe7dc76109295b",
+                "Gateway": "172.17.0.1",
+                "IPAddress": "172.17.0.2",
+                "IPPrefixLen": 16,
+                "IPv6Gateway": "",
+                "GlobalIPv6Address": "",
+                "GlobalIPv6PrefixLen": 0,
+                "MacAddress": "02:42:ac:11:00:02",
+                "DriverOpts": null
+            }
+        }
+
+OBS: quem configuou esta rede foi o próprio docker!
+
+crie um novo conteianer em execução
+
+```docker run -it ubuntu bash```
+
+Inspecione os containers criados
+
+```docker inspect 0629463ea98b```
+```docker inspect 49f695aca8f3```
+
+Verificando as redes criada pelo docker
+
+```docker network ls```
+
+Comunicação entre IPs dos containers
+
+```ping 172.17.0.2```
+
+### Criando a rede bridge
+
+Criando a proprio bridge para configurar o host name do nosso container
+
+```docker network create --driver bridge minha-bridge```
+
+Definindo o próprio nome do container para acessar ele via rede
+```docker run -it --name ubuntu1 --network minha-bridge ubuntu bash```
+
+Abra um outro terminal e veja o conteiner em execução
+
+```docker ps```
+
+Inspeciona o container criado
+
+```docker inspect ea101feb2759```
+
+OBS: Veja que agora esta com o nome da bridge criada
+
+"Networks": {
+                "minha-bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "ea101feb2759"
+                    ],
+                    "NetworkID": "155061d96b606584b95396d964c1f2d3e6f2dc86ad95dad4bf6f6589ef9e361f",
+                    "EndpointID": "c37a6a5742701a495cd3b6bac01f7424a89018c67adc3aa83f607a297ce68be3",
+                    "Gateway": "172.18.0.1",
+                    "IPAddress": "172.18.0.2",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:12:00:02",
+                    "DriverOpts": null
+                }
+            }
+
+Crie um novo containa com execução de 1 dia
+
+```docker run -d --name ubuntu2 --network minha-bridge ubuntu sleep 1d```
+
+Comunicação entre nomes dos containers
+
+```ping ubuntu2```
