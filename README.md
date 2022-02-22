@@ -299,3 +299,22 @@ OBS: está em ymls/docker-compose.yml
 Executando ao arquivo docker-compose.yml
 
 ```docker-compose up```
+
+### Complementando o Compose
+
+Documentação completa
+
+```https://docs.docker.com/compose/compose-file/compose-file-v3/```
+
+Inicia sem travar o terminal
+
+```docker-compose up -d```
+
+Mostra os serviços que foram criados pelo docker-compose
+
+```docker-compose ps```
+
+Remove todos os componentes e redes que foram criados
+
+```docker-compose down```
+
