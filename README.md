@@ -274,6 +274,8 @@ Para acessar a aplicação basta colocar
 
 http://localhost:3000/
 
+http://localhost:3000/seed
+
 Para e exetutar o container do banco mongo
 
 ```docker stop meu-mongo```
