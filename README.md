@@ -281,3 +281,10 @@ Para e exetutar o container do banco mongo
 ```docker stop meu-mongo```
 
 ```docker start meu-mongo```
+
+# Cordenando containers
+
+INstalando o docker-compose
+
+```https://docs.docker.com/compose/install/```
+
