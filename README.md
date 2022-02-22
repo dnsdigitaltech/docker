@@ -53,9 +53,19 @@ Basta acessar a aplicação em
 
 http://localhost:8081/
 
+Remobendo uma imagem
+
+```docker rmi dnssites/books:1.0```
+
 Removendo todas as imagens
+
 ```docker rmi $(docker image ls -aq)```
-# Subindo a imagem para o docker hub
+
+Removendo todas as imagens caso der erro
+
+```docker rmi $(docker image ls -aq) --force```
+
+### Subindo a imagem para o docker hub
 
 Para acessar pleo terminal basta colocar o comando abaixo com seu login e senha
 
@@ -76,6 +86,10 @@ Para criar um docker tag basta executar o comando abaixo com usuario/imagem do d
 ```docker tag developer/app-node:1.0 dnssites/app-node:1.0```
 
 ```docker push dnssites/app-node:1.0```
+
+### Dounload da imagem no docker hub
+
+```docker pull dnssites/app-node:1.0``
 
 # Persistindo informações
 
@@ -236,6 +250,32 @@ Executando o container na rede host
 Neste caso se a minha aplicação funciona na porta 3000 tenho acesso direto, pois coloquei meu container no mesmo host da minha rede.
  ```http://localhost:3000/```
 
- OBS: se houvesse outra aplicação rodadno na mesma porta daria conflito e nã exetutaria este container.
+ OBS: se houvesse outra aplicação rodadno na mesma porta daria conflito e não executaria este container.
 
+### Comunicando aplicação e banco
 
+Baixe a imagem do banco mongo:4.4.6.
+
+```docker pull mongo:4.4.6```
+
+Baixe a imagam da aplicação
+
+```docker pull dnssites/books:1.0```
+
+Crie container do banco mongo:4.4.6 na bridge minha-bridge, para que haja comunicação interna entre containers e com o host name meu-mongo, pois a aplicação está setada com este host name.
+
+```docker run -d --network minha-bridge --name meu-mongo mongo:4.4.6```
+
+Crie container da aplicação na bridge minha-bridge, para que haja comunicação interna entre containers e com o host name books, com o mapeamento de porta 3000.
+
+```docker run -d --network minha-bridge --name books -p 3000:3000 dnssites/books:1.0```
+
+Para acessar a aplicação basta colocar
+
+http://localhost:3000/
+
+Para e exetutar o container do banco mongo
+
+```docker stop meu-mongo```
+
+```docker start meu-mongo```
